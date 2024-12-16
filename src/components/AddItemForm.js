@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { TextField, Button, Grid } from '@mui/material';
 
 const AddItemForm = ({ addItem }) => {
   const [name, setName] = useState('');
@@ -6,27 +7,39 @@ const AddItemForm = ({ addItem }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!name || !amount) return alert('Please provide both name and amount');
-    addItem(name, parseInt(amount, 10));
-    setName('');
-    setAmount('');
+    if (name && amount) {
+      addItem(name, parseInt(amount));
+      setName('');
+      setAmount('');
+    }
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        placeholder="Item Name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
-      <input
-        type="number"
-        placeholder="Amount"
-        value={amount}
-        onChange={(e) => setAmount(e.target.value)}
-      />
-      <button type="submit">Add Item</button>
+      <Grid container spacing={2} alignItems="center">
+        <Grid item xs={6}>
+          <TextField
+            fullWidth
+            label="Item Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+        </Grid>
+        <Grid item xs={3}>
+          <TextField
+            fullWidth
+            type="number"
+            label="Amount"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+          />
+        </Grid>
+        <Grid item xs={3}>
+          <Button variant="contained" color="primary" fullWidth type="submit">
+            Add
+          </Button>
+        </Grid>
+      </Grid>
     </form>
   );
 };

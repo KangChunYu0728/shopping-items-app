@@ -1,31 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import ShoppingList from './components/ShoppingList';
-import { TextField, Button } from '@mui/material';
+import { TextField, Button, Box, Typography } from '@mui/material';
 
 const App = () => {
-  // Load initial data from localStorage (if available)
   const loadItemsFromLocalStorage = () => {
     const savedItems = localStorage.getItem('shoppingItems');
     return savedItems ? JSON.parse(savedItems) : [];
   };
 
-  // State to hold items in the shopping list
   const [items, setItems] = useState(loadItemsFromLocalStorage);
-
-  // State to handle the new item input fields
   const [newItemName, setNewItemName] = useState('');
   const [newItemAmount, setNewItemAmount] = useState('');
 
-  // Update localStorage when items state changes
   useEffect(() => {
     localStorage.setItem('shoppingItems', JSON.stringify(items));
-  }, [items]); // Runs every time items state changes
+  }, [items]);
 
-  // Add new item to the shopping list
   const addItem = () => {
     if (newItemName && newItemAmount) {
       const newItem = {
-        id: Date.now(), // Generate a unique id
+        id: Date.now(),
         name: newItemName,
         amount: parseInt(newItemAmount),
       };
@@ -35,12 +29,10 @@ const App = () => {
     }
   };
 
-  // Delete an item by id
   const deleteItem = (id) => {
     setItems(items.filter((item) => item.id !== id));
   };
 
-  // Update an item's amount
   const updateItem = (id, newAmount) => {
     setItems(
       items.map((item) =>
@@ -50,34 +42,69 @@ const App = () => {
   };
 
   return (
-    <div>
-      {/* Input fields to add a new item */}
-      <div>
-        <TextField
-          label="Item Name"
-          variant="outlined"
-          value={newItemName}
-          onChange={(e) => setNewItemName(e.target.value)}
-        />
-        <TextField
-          label="Amount"
-          variant="outlined"
-          type="number"
-          value={newItemAmount}
-          onChange={(e) => setNewItemAmount(e.target.value)}
-        />
-        <Button variant="contained" color="primary" onClick={addItem}>
-          Add Item
-        </Button>
-      </div>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: '100vh',
+        backgroundColor: '#f9f9f9',
+        padding: 3,
+      }}
+    >
+      <Typography variant="h3" gutterBottom>
+        Time to Go Shopping !!
+      </Typography>″
 
-      {/* Display the shopping list */}
-      <ShoppingList
-        items={items}
-        deleteItem={deleteItem}
-        updateItem={updateItem}
+      {/* Input section */}
+          <Box
+      sx={{
+        display: 'flex',
+        gap: 2,
+        marginBottom: 3,
+        width: '100%',
+        maxWidth: '600px', // Adjust width of the input section
+      }}
+    >
+      <TextField
+        fullWidth
+        label="Item Name"
+        variant="outlined"
+        value={newItemName}
+        onChange={(e) => setNewItemName(e.target.value)}
       />
-    </div>
+      <TextField
+        fullWidth
+        label="Amount"
+        variant="outlined"
+        type="number"
+        value={newItemAmount}
+        onChange={(e) => setNewItemAmount(e.target.value)}
+      />
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={addItem}
+        sx={{
+          height: '56px', // Same as the default height of MUI TextField
+          minWidth: '120px', // Slightly wider button
+        }}
+      >
+        Add Item
+      </Button>
+    </Box>
+
+
+      {/* Shopping list */}
+      <Box sx={{ width: '100%', maxWidth: '800px' }}> {/* Adjust list width */}
+        <ShoppingList
+          items={items}
+          deleteItem={deleteItem}
+          updateItem={updateItem}
+        />
+      </Box>
+    </Box>
   );
 };
 
